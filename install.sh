@@ -102,7 +102,7 @@ else
 	myuser=$myusergiven
 fi 
 
-
+apt install python-setuptools
 # Make sure all the necessary prerequisites are met.
 echo ""
 echo "Checking prerequisites..."
@@ -114,36 +114,6 @@ if ! grep -q $myuser /etc/passwd
         exit 1
 fi
 
-
-# check if ssh daemon is running
-sshstatus=$(service ssh status)
-if [[ ! $sshstatus =~ "active (running)" ]];
-	then
-		echo "### SSH is not running. Script will abort!"
-		exit 1
-fi
-
-# check for available, non-empty SSH key
-if ! fgrep -qs ssh /home/$myuser/.ssh/authorized_keys
-    then
-        fuECHO "### No SSH key for user '$myuser' found in /home/$myuser/.ssh/authorized_keys.\n ### Script will abort!"
-        exit 1
-fi
-
-# check for default SSH port
-sshport=$(fgrep Port /etc/ssh/sshd_config|cut -d ' ' -f2)
-if [ $sshport != 22 ];
-    then
-        fuECHO "### SSH port is not 22. Script will abort!"
-        exit 1
-fi
-
-# check if pubkey authentication is active
-if ! fgrep -q "PubkeyAuthentication yes" /etc/ssh/sshd_config
-	then
-		fuECHO "### Public Key Authentication is disabled /etc/ssh/sshd_config. \n ### Enable it by changing PubkeyAuthentication to 'yes'."
-		exit 1
-fi
 
 # check for ubuntu 16.04. distribution
 release=$(lsb_release -r|cut -d $'\t' -f2)
