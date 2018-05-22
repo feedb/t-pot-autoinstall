@@ -123,12 +123,6 @@ if [ $release != "16.04" ]
         exit 1
 fi
 
-# Let's make sure there is a warning if running for a second time
-if [ -f install.log ];
-  then
-        fuECHO "### Running more than once may complicate things. Erase install.log if you are really sure."
-        exit 1
-fi
 
 # set locale
 locale-gen "en_US.UTF-8"
@@ -223,7 +217,8 @@ apt-get autoremove -y
 
 # Let's remove NGINX default website
 fuECHO "### Removing NGINX default website."
-[ -e /etc/nginx/sites-enabled ] && rm /etc/nginx/sites-enabled/default  
+[ -f /etc/nginx/sites-enabled/default ] && rm /etc/nginx/sites-enabled/default  
+#[ -e /etc/nginx/sites-enabled ] && rm /etc/nginx/sites-enabled/default  
 [ -e /etc/nginx/sites-avaliable ] && rm /etc/nginx/sites-available/default  
 [ -e /usr/share/nginx/html/index.html ] && rm /usr/share/nginx/html/index.html  
 
